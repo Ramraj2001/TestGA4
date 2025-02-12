@@ -5,18 +5,24 @@ on:
     - cron: '0 12 * * *'  # This will run every day at 12:00 PM UTC
 
 jobs:
-  daily-commit:
+  create-daily-commit:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Commit changes with email ramraj.varatharaj@straive.com
+        
+      - name: Setup Git Config (ramraj.varatharaj@straive.com)
         run: |
-          echo "Daily commit on $(date)" >> daily_commit.txt
-          git config --local user.email "ramraj.varatharaj@straive.com"
-          git config --local user.name "GitHub Action"
-          git add daily_commit.txt
-          git commit -m "Daily commit on $(date)" || echo "No changes to commit"
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "ramraj.varatharaj@straive.com"
+          
+      - name: Create and commit daily update
+        run: |
+          # Create or update a file with current timestamp
+          echo "Last updated: $(date)" > last_update.txt
+          
+          # Add and commit the changes
+          git add last_update.txt
+          git commit -m "Daily automated update $(date)"
           git push
